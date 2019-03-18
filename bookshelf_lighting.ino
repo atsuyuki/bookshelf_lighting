@@ -1,10 +1,10 @@
 
 const double C = 255.0; // 用いるLEDに依存する定数
-
-int light_pin = 0;
-int led_pin = 1;
-int button_pin = 2;
-int max_value = 255;
+const int light_pin = 0;
+const int led_pin = 1;
+const int button_pin = 2;
+const int max_value = 255;
+const int fade_step = 10;
 
 void setup() {
   pinMode(light_pin, OUTPUT);
@@ -14,7 +14,7 @@ void setup() {
   fade(0, max_value);
 }
 
-int fade_step = 10;
+
 
 void loop() {
   button_wait(0); // 一旦ボタンを離す
