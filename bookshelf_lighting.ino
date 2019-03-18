@@ -1,62 +1,60 @@
+
 const double C = 255.0; // 用いるLEDに依存する定数
 
-int lightPin = 0;    // LED connected to digital pin 9
-int ledPin = 1;    // LED connected to digital pin 9
-int button = 2;
+int light_pin = 0;
+int led_pin = 1;
+int button_pin = 2;
 
 void setup() {
-  // nothing happens in setup
-  pinMode(button, INPUT_PULLUP);
+ pinMode(light_pin, OUTPUT);
+ pinMode(led_pin, OUTPUT);
+ pinMode(button_pin, INPUT_PULLUP);
 
-  fade(0, 255);
-
+ fade(0, 255);
 }
 
 void loop() {
-  while (digitalRead(button)) {
-    delay(200);
-  }
-  fade(250, 200);
+ button_wait();
+ fade(250, 200);
 
-  while (digitalRead(button)) {
-    delay(200);
-  }
-  fade(200, 100);
+ button_wait();
+ fade(200, 100);
 
-  while (digitalRead(button)) {
-    delay(200);
-  }
-  fade(100, 0);
-  digitalWrite(lightPin,LOW);
-  
+ button_wait();
+ fade(100, 0);
 
-  while (digitalRead(button)) {
-    delay(200);
-  }
-  fade(0, 255);
-
+ button_wait();
+ fade(0, 255);
+ delay(200);
 }
 
-void fade(int from, int to) {
-
-  if (from < to) {
-    for (int i = from ; i <= to; i += 1) {
-      analogWrite(lightPin, getDuty(i));
-      // wait for 30 milliseconds to see the dimming effect
-      delay(5);
-    }
-  } else {
-    for (int i = from ; i >= to; i -= 1) {
-      analogWrite(lightPin, getDuty(i));
-      // wait for 30 milliseconds to see the dimming effect
-      delay(5);
-    }
-
-  }
-
+void button_wait() {
+ while (digitalRead(button_pin)) {
+   delay(100);
+ }
 }
 
-int getDuty(double ratio) {
-  return round(exp(log(255.0) - (1 - (ratio / 255.0)) * log(C)));
+void fade(int start_value, int end_value) {
+ int current_value = start_value; // 開始値をセット
+
+
+ // 目標値に達していないうちはループ
+ while (current_value != end_value) {
+
+   // 目標値より小さい
+   if (current_value < end_value) {
+     ++current_value;
+   }
+
+   // 目標値より大きい
+   if (current_value > end_value) {
+     --current_value;
+   }
+   analogWrite(light_pin, get_duty(current_value));
+   delay(5);
+ }
 }
 
+int get_duty(double ratio) {
+ return round(exp(log(255.0) - (1 - (ratio / 255.0)) * log(C))) - 1; // Weber-Fechnerの法則
+}
