@@ -14,22 +14,31 @@ void setup() {
 }
 
 void loop() {
- button_wait();
+ button_wait(1);
  fade(250, 200);
+ 
+ button_wait(1);
+ fade(200, 150);
 
- button_wait();
- fade(200, 100);
+ button_wait(1);
+ fade(150, 100);
 
- button_wait();
- fade(100, 0);
+ button_wait(1);
+ fade(100, 50);
 
- button_wait();
- fade(0, 255);
- delay(200);
+ button_wait(1);
+ fade(50, 0);
+
+ button_wait(0);
+
+ button_wait(1);
+ fade(0, 250);
+
+ button_wait(0);
 }
 
-void button_wait() {
- while (digitalRead(button_pin)) {
+void button_wait(boolean flag) {
+ while (digitalRead(button_pin) == flag) {
    delay(100);
  }
 }
